@@ -1,0 +1,23 @@
+public enum TokenType {
+    DHORO,      
+    ID,         
+    NUMBER,     
+    STRING,
+    ASSIGN,     
+    EQ,         
+    NEQ,        
+    GT,         
+    LT,         
+    GTE,        
+    LTE,        
+    PLUS, MINUS, MUL, DIV,
+    LPAREN, RPAREN,
+    LBRACE, RBRACE, 
+    SEMI,       
+    TRUE, FALSE, 
+    IF,         
+    ELSE,       
+    WHILE,      
+    PRINT,      
+    EOF         
+}

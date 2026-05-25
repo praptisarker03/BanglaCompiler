@@ -1,0 +1,15 @@
+# Ignore compiled Java classes and build artifacts
+bin/
+*.class
+
+# Ignore generated outputs
+output.py
+output*.txt
+
+# Editor/OS files
+.DS_Store
+Thumbs.db
+
+# Python cache
+__pycache__/
+*.pyc

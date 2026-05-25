@@ -1,0 +1,144 @@
+[Input]: E:\Banglaa_Compiler\BanglaCompilar\input.bn
+[Output]: E:\Banglaa_Compiler\BanglaCompilar\output.txt
+=== STEP 1: LEXICAL ANALYSIS (TOKENS) ===
+Token{type=DHORO, lexeme='ধরো'}
+Token{type=ID, lexeme='ক'}
+Token{type=ASSIGN, lexeme='='}
+Token{type=NUMBER, lexeme='১০'}
+Token{type=SEMI, lexeme=';'}
+Token{type=DHORO, lexeme='ধরো'}
+Token{type=ID, lexeme='খ'}
+Token{type=ASSIGN, lexeme='='}
+Token{type=NUMBER, lexeme='৫'}
+Token{type=SEMI, lexeme=';'}
+Token{type=DHORO, lexeme='ধরো'}
+Token{type=ID, lexeme='যোগ'}
+Token{type=ASSIGN, lexeme='='}
+Token{type=ID, lexeme='ক'}
+Token{type=PLUS, lexeme='+'}
+Token{type=ID, lexeme='খ'}
+Token{type=SEMI, lexeme=';'}
+Token{type=DHORO, lexeme='ধরো'}
+Token{type=ID, lexeme='বড়'}
+Token{type=ASSIGN, lexeme='='}
+Token{type=ID, lexeme='যোগ'}
+Token{type=GT, lexeme='>'}
+Token{type=NUMBER, lexeme='১২'}
+Token{type=SEMI, lexeme=';'}
+Token{type=DHORO, lexeme='ধরো'}
+Token{type=ID, lexeme='ছোট'}
+Token{type=ASSIGN, lexeme='='}
+Token{type=ID, lexeme='যোগ'}
+Token{type=LT, lexeme='<'}
+Token{type=NUMBER, lexeme='২০'}
+Token{type=SEMI, lexeme=';'}
+Token{type=DHORO, lexeme='ধরো'}
+Token{type=ID, lexeme='বার্তা'}
+Token{type=ASSIGN, lexeme='='}
+Token{type=STRING, lexeme='হ্যালো দুনিয়া'}
+Token{type=SEMI, lexeme=';'}
+Token{type=PRINT, lexeme='দেখাও'}
+Token{type=LPAREN, lexeme='('}
+Token{type=ID, lexeme='যোগ'}
+Token{type=RPAREN, lexeme=')'}
+Token{type=SEMI, lexeme=';'}
+Token{type=PRINT, lexeme='দেখাও'}
+Token{type=LPAREN, lexeme='('}
+Token{type=ID, lexeme='বড়'}
+Token{type=RPAREN, lexeme=')'}
+Token{type=SEMI, lexeme=';'}
+Token{type=PRINT, lexeme='দেখাও'}
+Token{type=LPAREN, lexeme='('}
+Token{type=ID, lexeme='ছোট'}
+Token{type=RPAREN, lexeme=')'}
+Token{type=SEMI, lexeme=';'}
+Token{type=PRINT, lexeme='দেখাও'}
+Token{type=LPAREN, lexeme='('}
+Token{type=ID, lexeme='বার্তা'}
+Token{type=RPAREN, lexeme=')'}
+Token{type=SEMI, lexeme=';'}
+Token{type=EOF, lexeme=''}
+
+=== STEP 2: SYNTAX ANALYSIS (AST) ===
+Assignment: ক
+  Integer Value: ১০
+Assignment: খ
+  Integer Value: ৫
+Assignment: যোগ
+  Binary Operator: +
+    Variable: ক
+    Variable: খ
+Assignment: বড়
+  Binary Operator: >
+    Variable: যোগ
+    Integer Value: ১২
+Assignment: ছোট
+  Binary Operator: <
+    Variable: যোগ
+    Integer Value: ২০
+Assignment: বার্তা
+Print:
+  Variable: যোগ
+Print:
+  Variable: বড়
+Print:
+  Variable: ছোট
+Print:
+  Variable: বার্তা
+
+=== STEP 3: SEMANTIC ANALYSIS & SYMBOL TABLE ===
+[Status]: Type checking passed.
+[Status]: Scope check passed.
+-------------------------
+Variable | Value (Bangla)
+-------------------------
+ক : ১০
+খ : ৫
+যোগ : ১৫
+বড় : সত্য
+ছোট : সত্য
+বার্তা : হ্যালো দুনিয়া
+-------------------------
+[Print Output]:
+  ১৫
+  সত্য
+  সত্য
+  হ্যালো দুনিয়া
+
+=== STEP 4: INTERMEDIATE CODE ===
+ক = ১০
+খ = ৫
+t1 = ক + খ
+যোগ = t1
+t2 = যোগ > ১২
+বড় = t2
+t3 = যোগ < ২০
+ছোট = t3
+বার্তা = "হ্যালো দুনিয়া"
+PRINT যোগ
+PRINT বড়
+PRINT ছোট
+PRINT বার্তা
+
+=== STEP 5: CODE OPTIMIZATION ===
+[Before]: 13 instructions
+[After]:  12 instructions
+[Removed]: 1 instructions
+-------------------------
+[Optimized Code]:
+  ক = ১০
+  খ = ৫
+  যোগ = ১৫
+  t2 = ১৫ > ১২
+  বড় = t2
+  t3 = ১৫ < ২০
+  ছোট = t3
+  বার্তা = "হ্যালো দুনিয়া"
+  PRINT যোগ
+  PRINT বড়
+  PRINT ছোট
+  PRINT বার্তা
+
+=== STEP 6: TARGET CODE GENERATION ===
+[Status]: Python target code generated successfully.
+[Target File]: E:\Banglaa_Compiler\BanglaCompilar\output.py
