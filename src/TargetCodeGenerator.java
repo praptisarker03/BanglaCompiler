@@ -1,11 +1,13 @@
-import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+// TargetCodeGenerator: Converts Bangla AST or intermediate code to Python source code
+// Generates executable Python from the Bangla program
 public class TargetCodeGenerator {
 
-    
+    // Generate Python code from intermediate instructions
     public String generatePythonCode(List<Instruction> instructions) {
         StringBuilder pyCode = new StringBuilder();
         appendPythonPrelude(pyCode);
@@ -26,7 +28,7 @@ public class TargetCodeGenerator {
         return pyCode.toString();
     }
 
-    
+    // Generate Python code directly from Abstract Syntax Tree
     public String generatePythonFromAST(List<ASTNode> nodes) {
         StringBuilder pyCode = new StringBuilder();
         appendPythonPrelude(pyCode);
@@ -38,9 +40,12 @@ public class TargetCodeGenerator {
         return pyCode.toString();
     }
 
+    // Recursively generate Python code for a block of AST nodes
     private void generateBlock(List<ASTNode> nodes, int indent, StringBuilder pyCode, List<String> userVars) {
         for (ASTNode node : nodes) {
+            // Handle indentation for nested blocks
             String pad = "    ".repeat(indent);
+            // Handle assignment statements
             if (node instanceof AssignNode) {
                 AssignNode assign = (AssignNode) node;
                 String expr = generateExpression(assign.expr);
@@ -70,12 +75,15 @@ public class TargetCodeGenerator {
         }
     }
 
+    // Convert AST expressions to Python code expressions
     private String generateExpression(ASTNode node) {
+        // Handle numeric literals
         if (node instanceof NumberNode) {
             return String.valueOf(((NumberNode) node).value);
         }
+        // Handle string literals
         if (node instanceof StringNode) {
-            return "\"" + ((StringNode) node).value.replace("\"", "\\\"") + "\"";
+            return "\"" + ((StringNode) node).value.replace("\"", "\\\"") + "\"";  
         }
         if (node instanceof BooleanNode) {
             return ((BooleanNode) node).value ? "True" : "False";
@@ -83,10 +91,12 @@ public class TargetCodeGenerator {
         if (node instanceof VarNode) {
             return ((VarNode) node).name;
         }
+        // Handle binary operations (arithmetic and comparisons)
         if (node instanceof BinOpNode) {
             BinOpNode binOp = (BinOpNode) node;
             String left = generateExpression(binOp.left);
             String right = generateExpression(binOp.right);
+            // Use custom truncation division to match Bangla semantics
             if ("/".equals(binOp.operator)) {
                 return "trunc_div(" + left + ", " + right + ")";
             }
@@ -95,9 +105,10 @@ public class TargetCodeGenerator {
         return "None";
     }
 
+    // Add Python helper functions and header comments
     private void appendPythonPrelude(StringBuilder pyCode) {
         pyCode.append("# Auto-generated Python Target Code from Bangla Compiler\n\n");
-        pyCode.append("def trunc_div(a, b):\n");
+        pyCode.append("def trunc_div(a, b):\n");  // Define truncating integer division
         pyCode.append("    if b == 0:\n");
         pyCode.append("        raise ZeroDivisionError('division by zero')\n");
         pyCode.append("    return int(a / b)\n\n");

@@ -1,5 +1,5 @@
-[Input]: E:\Banglaa_Compiler\BanglaCompilar\input.bn
-[Output]: E:\Banglaa_Compiler\BanglaCompilar\output.txt
+[Input]: C:\Users\Personal\Downloads\Banglaa_Compiler\BanglaCompilar\input.bn
+[Output]: C:\Users\Personal\Downloads\Banglaa_Compiler\BanglaCompilar\output.txt
 === STEP 1: LEXICAL ANALYSIS (TOKENS) ===
 Token{type=DHORO, lexeme='ধরো'}
 Token{type=ID, lexeme='ক'}
@@ -141,4 +141,4 @@ PRINT বার্তা
 
 === STEP 6: TARGET CODE GENERATION ===
 [Status]: Python target code generated successfully.
-[Target File]: E:\Banglaa_Compiler\BanglaCompilar\output.py
+[Target File]: C:\Users\Personal\Downloads\Banglaa_Compiler\BanglaCompilar\output.py

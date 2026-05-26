@@ -1,14 +1,24 @@
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+// Main: Entry point of the Bangla Compiler
+// Orchestrates the full compilation pipeline:
+// 1. Lexical Analysis (Tokenization)
+// 2. Syntax Analysis (Parsing to AST)
+// 3. Semantic Analysis (Type checking, Symbol Table)
+// 4. Intermediate Code Generation
+// 5. Code Optimization
+// 6. Target Code Generation (Python)
 public class Main {
     public static void main(String[] args) {
+        // Get input and output file paths from arguments or use defaults
         String inputFilePath = args.length > 0 ? args[0] : "input.bn";
         String outputFilePath = args.length > 1 ? args[1] : "output.txt";
+        // Current working directory
         java.nio.file.Path cwd = Paths.get("").toAbsolutePath();
         java.nio.file.Path inputPath = Paths.get(inputFilePath);
         java.nio.file.Path outputPath = Paths.get(outputFilePath);
@@ -28,19 +38,25 @@ public class Main {
         }
         try (PrintWriter out = new PrintWriter(outputPath.toFile(), StandardCharsets.UTF_8)) {
             try {
+                // Read source code from Bangla file
                 String source = Files.readString(inputPath, StandardCharsets.UTF_8);
 
+                // Step 1: Lexical Analysis - Convert source to tokens
                 Lexer lexer = new Lexer(source);
                 List<Token> tokens = lexer.scanTokens();
 
-                
+                // Step 2: Syntax Analysis - Parse tokens into AST
                 Parser parser = new Parser(tokens);
                 List<ASTNode> astNodes = parser.parse();
+                
+                // Step 3: Semantic Analysis - Type checking and symbol table
                 SymbolTable st = new SymbolTable();
                 SemanticAnalyzer analyzer = new SemanticAnalyzer(st);
                 analyzer.analyze(astNodes);
+                
                 out.println("[Input]: " + inputPath);
                 out.println("[Output]: " + outputPath);
+                // Print compilation report
                 out.println("=== STEP 1: LEXICAL ANALYSIS (TOKENS) ===");
                 for (Token t : tokens) {
                     out.println(t.toString());
@@ -66,6 +82,7 @@ public class Main {
                     }
                 }
 
+                // Step 4: Intermediate Code Generation
                 IntermediateCodeGenerator icg = new IntermediateCodeGenerator();
                 List<Instruction> instructions = icg.generate(astNodes);
                 
@@ -74,7 +91,7 @@ public class Main {
                     out.println(inst.toString());
                 }
 
-                
+                // Step 5: Code Optimization - Constant folding, dead code removal
                 Optimizer optimizer = new Optimizer();
                 List<Instruction> optimized = optimizer.optimize(instructions);
 
@@ -88,10 +105,11 @@ public class Main {
                     out.println("  " + inst.toString());
                 }
 
-                
+                // Step 6: Target Code Generation - Generate Python code
                 TargetCodeGenerator tcg = new TargetCodeGenerator();
                 String pythonCode = tcg.generatePythonFromAST(astNodes);
                 
+                // Write generated Python to file
                 java.nio.file.Path targetPath = outputPath.getParent().resolve("output.py");
                 Files.writeString(targetPath, pythonCode, StandardCharsets.UTF_8);
 

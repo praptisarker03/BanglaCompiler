@@ -1,10 +1,15 @@
 import java.util.*;
 
+// Optimizer: Performs intermediate code optimization
+// - Constant Folding: Evaluates constant expressions at compile time
+// - Constant Propagation: Replaces variables with their constant values
+// - Dead Code Elimination: Removes unused temporary variables
 public class Optimizer {
     private final List<String> optimizationLog = new ArrayList<>();
 
+    // Main optimization method: applies various optimization techniques
     public List<Instruction> optimize(List<Instruction> original) {
-
+        // Copy instructions while preserving control flow statements
         List<Instruction> code = new ArrayList<>();
         for (Instruction inst : original) {
             if (inst.type.equals("LABEL") || inst.type.equals("GOTO") || 
@@ -15,6 +20,7 @@ public class Optimizer {
             }
         }
 
+        // Check if code contains control flow (loops, conditionals)
         boolean hasControlFlow = false;
         for (Instruction inst : code) {
             if (inst.type.equals("LABEL") || inst.type.equals("GOTO") || 
@@ -24,15 +30,17 @@ public class Optimizer {
             }
         }
 
+        // Apply constant folding and propagation only for code without control flow
         if (!hasControlFlow) {
             Map<String, String> constants = new LinkedHashMap<>();
             for (int i = 0; i < code.size(); i++) {
                 Instruction inst = code.get(i);
 
-
+                // Skip control flow instructions
                 if (isControlFlow(inst)) continue;
 
 
+                // Constant Propagation: Replace variables with their constant values
                 if (inst.arg1 != null && constants.containsKey(inst.arg1)) {
                     String oldArg = inst.arg1;
                     inst.arg1 = constants.get(inst.arg1);
@@ -43,6 +51,7 @@ public class Optimizer {
                     inst.arg2 = constants.get(inst.arg2);
                     optimizationLog.add("Constant Propagation: replaced '" + oldArg + "' with '" + inst.arg2 + "' in instruction " + (i + 1));
                 }
+                // Constant Folding: Evaluate constant expressions at compile time
                 if (inst.operator != null && inst.arg1 != null && inst.arg2 != null) {
                     Integer left = tryParseBangla(inst.arg1);
                     Integer right = tryParseBangla(inst.arg2);
@@ -77,6 +86,7 @@ public class Optimizer {
             }
         }
 
+        // Dead Code Elimination: Remove unused temporary variables
         Set<String> usedVars = new HashSet<>();
         for (Instruction inst : code) {
             if (inst.arg1 != null) usedVars.add(inst.arg1);
@@ -99,6 +109,7 @@ public class Optimizer {
                inst.type.equals("IF_FALSE_GOTO") || inst.type.equals("PRINT");
     }
 
+    // Convert Bangla numerals to Java integers for arithmetic operations
     private Integer tryParseBangla(String s) {
         if (s == null || s.isEmpty()) return null;
         try {
@@ -107,7 +118,7 @@ public class Optimizer {
                 if (c == '-') {
                     sb.append('-');
                 } else if (c >= '০' && c <= '৯') {
-                    sb.append((char) (c - '০' + '0'));
+                    sb.append((char) (c - '०' + '0'));
                 } else {
                     return null; 
                 }
@@ -118,6 +129,7 @@ public class Optimizer {
         }
     }
 
+    // Perform arithmetic operations for constant folding
     private Integer fold(int left, String operator, int right) {
         switch (operator) {
             case "+": return left + right;
@@ -128,6 +140,7 @@ public class Optimizer {
         }
     }
 
+    // Check if a variable is a temporary (named t0, t1, t2, etc.)
     private boolean isTemp(String name) {
         return name != null && name.matches("t\\d+");
     }
