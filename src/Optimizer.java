@@ -1,9 +1,5 @@
 import java.util.*;
 
-// Optimizer: Performs intermediate code optimization
-// - Constant Folding: Evaluates constant expressions at compile time
-// - Constant Propagation: Replaces variables with their constant values
-// - Dead Code Elimination: Removes unused temporary variables
 public class Optimizer {
     private final List<String> optimizationLog = new ArrayList<>();
 

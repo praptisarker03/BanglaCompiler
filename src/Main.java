@@ -5,14 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-// Main: Entry point of the Bangla Compiler
-// Orchestrates the full compilation pipeline:
-// 1. Lexical Analysis (Tokenization)
-// 2. Syntax Analysis (Parsing to AST)
-// 3. Semantic Analysis (Type checking, Symbol Table)
-// 4. Intermediate Code Generation
-// 5. Code Optimization
-// 6. Target Code Generation (Python)
+
 public class Main {
     public static void main(String[] args) {
         // Get input and output file paths from arguments or use defaults
@@ -109,7 +102,7 @@ public class Main {
                 TargetCodeGenerator tcg = new TargetCodeGenerator();
                 String pythonCode = tcg.generatePythonFromAST(astNodes);
                 
-                // Write generated Python to file
+                //  generated Python to file
                 java.nio.file.Path targetPath = outputPath.getParent().resolve("output.py");
                 Files.writeString(targetPath, pythonCode, StandardCharsets.UTF_8);
 
